@@ -1,0 +1,38 @@
+dq avoid ? 0x0000000000000000
+; input variables
+dq y ? 0x4008000000000000
+dq x ? 0x3FF0000000000000
+dq z ? 0x3FE0000000000000
+dq q ? 0x3FD3333333333333
+dq u ? 0x4000000000000000
+dq w ? 0x4042000000000000
+dq v ? 0x3FF0000000000000
+dq p ? 0x4039000000000000
+dq l ? 0x3FC999999999999A
+
+; intermediate variables
+dq x_plus_z ? 0x0000000000000000
+dq y_div_xz ? 0x0000000000000000
+dq q_mul_u 		? 0x0000000000000000
+dq p_mul_l 		? 0x0000000000000000
+dq v_plus_pl		? 0x0000000000000000
+dq w_div_vpl		? 0x0000000000000000
+dq yxz_sub_qu 		? 0x0000000000000000
+
+; result
+dq a			? 0x0000000000000000
+add x z x_plus_z
+div y x_plus_z y_div_xz
+out y_div_xz ? 0
+
+mul q u q_mul_u
+out q_mul_u ? 0
+
+mul p l p_mul_l
+add v p_mul_l v_plus_pl
+div w v_plus_pl w_div_vpl
+out w_div_vpl ? 0
+
+sub y_div_xz q_mul_u yxz_sub_qu
+add yxz_sub_qu w_div_vpl a
+out a ? 0

@@ -1,0 +1,17 @@
+; define levels in graph
+dq avoid 	? 0x0000000000000000
+dq A 		? 0x0000000000000000
+dq B 		? 0x401C000000000000
+dq C 		? 0x4000000000000000
+dq D 		? 0x4014000000000000
+dq a_plus_b	? 0x401C000000000000
+dq c_plus_d	? 0x401C000000000000
+dq temp		? 0x401C000000000000
+dq res		? 0x401C000000000000
+
+ADD A		B		A_plus_B
+ADD C		D		C_plus_D
+ADD A_plus_B	C_plus_D	temp
+MUL temp	C_plus_D	res
+
+OUT res		?		0
