@@ -38,7 +38,7 @@ public abstract class MemoryFile {
 	
 	public void setNumberOfLinesString(){
 		numberOfLines =linesList.size();
-		numberOfLinesString = String.format("%08X", numberOfLines);	
+		numberOfLinesString = String.format("%09X", numberOfLines);	
 	}
 	
 	public void fillMemoryFile(String filePath){

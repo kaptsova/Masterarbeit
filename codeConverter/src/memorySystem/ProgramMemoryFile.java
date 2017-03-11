@@ -25,8 +25,8 @@ public class ProgramMemoryFile extends MemoryFile{
 	@Override
 	public void setPrecisionType(PrecisionType precType) {
 		// currently only 1 precision type is available
-		int numberOfDigits = 8;
-		precisionTypeString = String.format("%08X", numberOfDigits);
+		int numberOfDigits = 9;
+		precisionTypeString = String.format("%09X", numberOfDigits);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class ProgramMemoryFile extends MemoryFile{
 	}
 	
 	private void doNothing() {
-		linesList.add("00380000");		
+		linesList.add("003800000");		
 	}
 		
 	private void fillMemoryList_notOptimised(ProgramCode pcode, PrecisionType prType){

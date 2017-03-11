@@ -146,7 +146,7 @@ public abstract class Optimiser {
 
 
 	private void doNothing() {
-		linesList.add("00380000");		
+		linesList.add("003800000");		
 	}
 
 	private boolean startExecutionInAlu(int takt) {

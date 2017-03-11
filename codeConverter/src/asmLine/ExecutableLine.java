@@ -593,7 +593,7 @@ public class ExecutableLine extends AsmLine{
 			String binaryOperation = wbAddr + wbCom + addr2 + addr1 + exCom; 
 			
 			System.out.println("heelo" + binaryOperation);
-			calculationOperation = binaryToHex(binaryOperation) ;//+ Rf;
+			calculationOperation = binaryToHex(binaryOperation) + Rf;
 		}
 
 		private String getRf_hex() {
@@ -628,7 +628,7 @@ public class ExecutableLine extends AsmLine{
 			String Rf	  = "0000";
 			
 			String binaryOperation = wbAddr + wbCom + addr2 + addr1 + exCom;
-			writeBackOperation =  binaryToHex(binaryOperation) ;//+ "0";
+			writeBackOperation =  binaryToHex(binaryOperation) + "0";
 		}
 		
 		public void setOperations(){
