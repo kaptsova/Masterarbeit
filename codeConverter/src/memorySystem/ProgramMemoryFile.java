@@ -26,7 +26,7 @@ public class ProgramMemoryFile extends MemoryFile{
 	public void setPrecisionType(PrecisionType precType) {
 		// currently only 1 precision type is available
 		int numberOfDigits = 9;
-		precisionTypeString = String.format("%09X", numberOfDigits);
+		precisionTypeString = String.format("%08X", numberOfDigits);
 	}
 
 	@Override

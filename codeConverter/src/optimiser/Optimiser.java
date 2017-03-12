@@ -258,11 +258,18 @@ public abstract class Optimiser {
 	public abstract ExecutableLine chooseNode();
 	
 	public void recognizeBypass(){
-		for (ExecutableLine ex : executableCode){
-			if (ex.canBeForwarded()){
-				ExecutableLine descendant = ex.descendants.get(0);
-				ResultForwardingItem rf = new ResultForwardingItem(ex, descendant);
-				resultForwardingList.add(rf);
+		for (ExecutableLine ancestor : executableCode){
+			ResultForwardingItem rf = null;
+			if (ancestor.canBeForwarded()){
+				ExecutableLine descendant = ancestor.descendants.get(0);
+				while (descendant.canAcceptForwarding() && ancestor.canBeForwarded()){
+					if (rf == null){
+						rf = new ResultForwardingItem(ancestor, descendant);	
+					} else {
+						rf.descendants.add(descendant);
+					}
+					resultForwardingList.add(rf);
+				}
 			}
 		}
 	}

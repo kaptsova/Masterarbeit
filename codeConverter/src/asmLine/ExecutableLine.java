@@ -530,6 +530,18 @@ public class ExecutableLine extends AsmLine{
 	public boolean canAcceptForwarding(){
 		return (isAripheticOperation());
 	}
+	
+	public boolean swapOperands(){
+		boolean swapable = isAddition() || isMultiplication();
+		if (swapable){
+			Operand temp = operandIn1;
+			operandIn1   = operandIn2;
+			operandIn2   = temp;
+		}
+		return swapable;
+		
+	}
+	
 
 
 	public class Operator {
@@ -581,6 +593,11 @@ public class ExecutableLine extends AsmLine{
 			return nullString + hexString;
 		}
 		
+		public void setRfDelay(int leftRf, int rightRf){
+			leftOperandRf_delay = leftRf;
+			rightOperandRf_delay = rightRf;
+		}
+		
 		public void setCalculationOperation(){
 			
 			String wbAddr = "00000000";
@@ -591,8 +608,6 @@ public class ExecutableLine extends AsmLine{
 			String Rf 	  = getRf_hex();
 			
 			String binaryOperation = wbAddr + wbCom + addr2 + addr1 + exCom; 
-			
-			System.out.println("heelo" + binaryOperation);
 			calculationOperation = binaryToHex(binaryOperation) + Rf;
 		}
 

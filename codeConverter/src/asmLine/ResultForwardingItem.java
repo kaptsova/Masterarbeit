@@ -21,6 +21,8 @@ public class ResultForwardingItem extends ExecutableLine{
 	public ResultForwardingItem(ExecutableLine initFirstAsmLine, ExecutableLine initSecondAsmLine){
 		ex1 = initFirstAsmLine;
 		ex2 = initSecondAsmLine;
+		exLines.add(initFirstAsmLine);
+		exLines.add(initSecondAsmLine);
 		
 		operator = new RfOperator(ex1, ex2);
 	}
