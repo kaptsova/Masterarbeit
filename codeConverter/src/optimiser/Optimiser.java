@@ -2,9 +2,6 @@ package optimiser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import asmLine.ExecutableLine;
 import asmLine.ExecutableLine.Operator;
@@ -20,12 +17,15 @@ public abstract class Optimiser {
 	ArrayList<ExecutableLine> toBeExecutedNodes = new ArrayList<ExecutableLine>();
 	ArrayList<String> linesList = new ArrayList<String>();
 	
+	HashMap<Integer, ExecutableLine> startOpMap = new HashMap<Integer, ExecutableLine>();
 	HashMap<Integer, ExecutableLine> writeBackMap = new HashMap <Integer,ExecutableLine>();
 	HashMap<Integer, ExecutableLine> endOfOpMap = new HashMap <Integer, ExecutableLine>();
 	HashMap <Integer, ExecutableLine> checkList = new HashMap<Integer, ExecutableLine>();
 	
 	ArrayList<ExecutableLine> executableCode = null;
 	ArrayList<ResultForwardingItem> resultForwardingList = new ArrayList<ResultForwardingItem>();
+	
+	HashMap<ExecutableLine, ResultForwardingItem> resultForwardingMap = new HashMap<ExecutableLine, ResultForwardingItem>();
 	
 	int numberOfCommandsExecuted = 0;
 	int numberOfCommandsToExecute = 0;
@@ -78,9 +78,7 @@ public abstract class Optimiser {
 			if (ex.getCmdType() != CommandType.outputCommand){
 				ex.setReadNodesToBeExecuted(executableCode);
 			}
-		}	
-		
-			
+		}				
 	}
 	
 	public void calculateLevelsInGraph(ArrayList<ExecutableLine> executableCode){
@@ -169,6 +167,7 @@ public abstract class Optimiser {
 				else {
 					writeBackMap.put(takt + operator.getAluDelay(), ex);
 				}
+				startOpMap.put(takt, ex);
 				System.out.println("started " + ex);
 				return true;
 			}
@@ -185,10 +184,14 @@ public abstract class Optimiser {
 		ExecutableLine ex = writeBackMap.get(takt);
 		Operator operator = ex.getOperator();
 		
-		if (ex.canBeForwarded()){
-			boolean rf = tryResultForwarding(ex, takt-1);
-			if (rf)
-				return;
+		if (resultForwardingMap.containsKey(ex)){
+			int size = resultForwardingMap.get(ex).getExLines().size(); 
+			if (size > 1) {
+				boolean rf = tryResultForwarding(ex, takt-1);
+				if (rf) {
+					return;
+				}
+			}
 		} else {
 			addDescendantsToCheckList(ex);	
 		}
@@ -199,7 +202,8 @@ public abstract class Optimiser {
 		endOfOpMap.put(takt + operator.getPipeDelay() - 1, ex);
 	}
 
-
+	// TODO try to implement delay up to 3 takts, if takt is occupied
+	// TODO test if result forwarding reg is occupied: add arraylists for each rf reg
 	private boolean tryResultForwarding(ExecutableLine ex, int takt) {
 		boolean success = true;
 		
@@ -211,20 +215,34 @@ public abstract class Optimiser {
 		checkList.put(nodeIndex, nextEx);
 		nextEx.setExecStatus(executableCode);
 		
-		if (nextEx.getExecStatus() == ExecutionStatus.permittedStatus){
-			System.out.println("heheu");
-			nextEx.setRfCalculationOperation();
-			startExecutionInAlu(nextEx, takt);
-			ex.endExecution();
+		if ((nextEx.getExecStatus() == ExecutionStatus.permittedStatus) && (!isTaktOccupied(takt))){
+			startExecutionRf(ex, nextEx, takt);
 			numberOfCommandsExecuted++;
+			updateRfMap(ex, nextEx);
 			return success;
 		}
 		else {
+			updateRfMap(ex, nextEx);
 			success = false;
 			ex.setExecStatus(status);
 			return false;
 		}
 		
+	}
+
+	
+	private void updateRfMap(ExecutableLine ex, ExecutableLine nextEx) {
+		ResultForwardingItem rf = resultForwardingMap.get(ex);
+		rf = rf.deleteFirst();
+		resultForwardingMap.remove(ex);
+		resultForwardingMap.put(nextEx, rf);
+	}
+
+
+	private void startExecutionRf(ExecutableLine ex, ExecutableLine nextEx, int takt) {
+		nextEx.setRfCalculationOperation(ex);
+		startExecutionInAlu(nextEx, takt);
+		ex.endExecution();
 	}
 	
 	private void endExecution(int takt) {
@@ -267,6 +285,17 @@ public abstract class Optimiser {
 		
 	}
 	
+	private boolean isTaktOccupiedWithOperation(int takt) {
+		if (startOpMap.containsKey(takt))
+			return true;
+		else 
+			return false;		
+	}
+	
+	private boolean isTaktOccupied(int takt){
+		return (isTaktOccupiedWithWb(takt)&& isTaktOccupiedWithOperation(takt));
+	}
+	
 	public static Optimiser createOptimiser(OptimisationCriterion initOptCriterion) {
 		OptimisationCriterion optCriterion = initOptCriterion;	
 		Optimiser opt = null;
@@ -293,8 +322,9 @@ public abstract class Optimiser {
 	public abstract ExecutableLine chooseNode();
 	
 	public void recognizeBypass(){
-		for (ExecutableLine ancestor : executableCode){
+		for (ExecutableLine ex : executableCode){
 			ResultForwardingItem rf = null;
+			ExecutableLine ancestor = ex;
 			if (ancestor.canBeForwarded()){
 				ExecutableLine descendant = ancestor.descendants.get(0);
 				while (descendant.canAcceptForwarding()){
@@ -314,6 +344,7 @@ public abstract class Optimiser {
 					
 				}
 				if (rf != null){
+					resultForwardingMap.putIfAbsent(ex, rf);
 					resultForwardingList.add(rf);
 				}
 			}

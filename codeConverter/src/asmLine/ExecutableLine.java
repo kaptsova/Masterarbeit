@@ -38,12 +38,13 @@ public class ExecutableLine extends AsmLine{
 	public void setResultForwarding(boolean isResultForwarding) {
 		this.isResultForwarding = isResultForwarding;
 	}
-
-	private boolean isRightOperandRf = false;
-	private boolean isLeftOperandRf = true;
 	
+	private boolean isLeftOperandRf = false;
+	private boolean isRightOperandRf = false;
+
+	private int leftOperandRf_delay = 0;	
 	private int rightOperandRf_delay = 0;
-	private int leftOperandRf_delay = 0;
+
 	
 	private int levelInGraph = 0;
 	private int nodeIndex = 0;
@@ -551,8 +552,16 @@ public class ExecutableLine extends AsmLine{
 		return swapable;		
 	}
 	
-	public void setRfCalculationOperation(){
-		leftOperandRf_delay = 1;
+	public void setRfCalculationOperation(ExecutableLine ex){
+		if (ex.equals(this.leftAncestor)) {
+			leftOperandRf_delay = 1;
+			isLeftOperandRf = true;
+		} 
+		// TODO implement in ViSARD core
+		else if (ex.equals(this.rightAncestor)) {
+			rightOperandRf_delay = 1;
+			isRightOperandRf = true;
+		}
 		operator.setCalculationOperation();
 	}
 	
@@ -707,7 +716,5 @@ public class ExecutableLine extends AsmLine{
 	}
 	public void setOperandOut(Operand operandOut) {
 		this.operandOut = operandOut;
-	}
-
-	
+	}	
 }

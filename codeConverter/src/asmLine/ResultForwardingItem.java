@@ -7,6 +7,10 @@ public class ResultForwardingItem extends ExecutableLine{
 	private ArrayList<ExecutableLine> exLines = new ArrayList<ExecutableLine>();
 
 	
+	public ArrayList<ExecutableLine> getExLines() {
+		return exLines;
+	}
+
 	RfOperator operator = null;
 	
 	public static int maxLength = 5;
@@ -30,9 +34,13 @@ public class ResultForwardingItem extends ExecutableLine{
 		operator.operators.add(op);
 	}
 	
-	public ResultForwardingItem splitIntoTwoRfItems(int i){
-		ResultForwardingItem item1 = this;
-		return item1;		
+	public ResultForwardingItem deleteFirst(){
+		ResultForwardingItem trimmedRf = this;
+		if (!trimmedRf.exLines.isEmpty()){
+			trimmedRf.exLines.remove(0);
+			trimmedRf.operator.operators.remove(0);
+		}
+		return trimmedRf;		
 	}
 
 	
