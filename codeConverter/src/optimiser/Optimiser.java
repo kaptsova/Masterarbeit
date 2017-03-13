@@ -210,8 +210,10 @@ public abstract class Optimiser {
 		int nodeIndex = nextEx.getNodeIndex();
 		checkList.put(nodeIndex, nextEx);
 		nextEx.setExecStatus(executableCode);
+		
 		if (nextEx.getExecStatus() == ExecutionStatus.permittedStatus){
 			System.out.println("heheu");
+			nextEx.setRfCalculationOperation();
 			startExecutionInAlu(nextEx, takt);
 			ex.endExecution();
 			numberOfCommandsExecuted++;
@@ -304,9 +306,6 @@ public abstract class Optimiser {
 					ancestor = descendant;
 					if (ancestor.canBeForwarded()){
 						ancestor.setResultForwarding(true);	
-						
-						// TODO change it during optimization not here
-						ancestor.setRfCalculationOperation();
 						
 						descendant = ancestor.descendants.get(0);
 					} else {
