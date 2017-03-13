@@ -35,8 +35,12 @@ public class ExecutableLine extends AsmLine{
 	
 	private boolean isResultForwarding = false;
 	
+	public void setResultForwarding(boolean isResultForwarding) {
+		this.isResultForwarding = isResultForwarding;
+	}
+
 	private boolean isRightOperandRf = false;
-	private boolean isLeftOperandRf = false;
+	private boolean isLeftOperandRf = true;
 	
 	private int rightOperandRf_delay = 0;
 	private int leftOperandRf_delay = 0;
@@ -463,15 +467,21 @@ public class ExecutableLine extends AsmLine{
 		if (leftAncestorIndex == 0){
 			leftAncestorExecuted = true;
 		}
-		else if (executableCode.get(leftAncestorIndex - 1).getExecStatus() == ExecutionStatus.wbFinishedStatus){
-			leftAncestorExecuted = true;
+		else {
+			ExecutionStatus status = executableCode.get(leftAncestorIndex - 1).getExecStatus();
+			if ( status == ExecutionStatus.wbFinishedStatus || status == ExecutionStatus.resultForwardedStatus){
+				leftAncestorExecuted = true;
+			}
 		}
 
 		if (rightAncestorIndex == 0){
 			rightAncestorExecuted = true;			
 		}
-		else if (executableCode.get(rightAncestorIndex - 1).getExecStatus() == ExecutionStatus.wbFinishedStatus){
-			rightAncestorExecuted = true;
+		else {
+			ExecutionStatus status = executableCode.get(rightAncestorIndex - 1).getExecStatus();
+			if (status == ExecutionStatus.wbFinishedStatus || status == ExecutionStatus.resultForwardedStatus){
+				rightAncestorExecuted = true;
+			}
 		}
 		ancestorsExecuted = leftAncestorExecuted && rightAncestorExecuted;
 	}
@@ -524,9 +534,9 @@ public class ExecutableLine extends AsmLine{
 	}
 	// TODO: other mnemonics can be executed
 	public boolean canBeForwarded(){
-		return (isAripheticOperation() &&  hasOneDescendant());
+		return (isAripheticOperation() &&  hasOneDescendant() && !isResultForwarding);
 	}
-	
+
 	public boolean canAcceptForwarding(){
 		return (isAripheticOperation());
 	}
@@ -538,10 +548,20 @@ public class ExecutableLine extends AsmLine{
 			operandIn1   = operandIn2;
 			operandIn2   = temp;
 		}
-		return swapable;
-		
+		return swapable;		
 	}
 	
+	public void setRfCalculationOperation(){
+		leftOperandRf_delay = 1;
+		operator.setCalculationOperation();
+	}
+	
+
+
+	public boolean isResultForwarding() {
+		return isResultForwarding;
+	}
+
 
 
 	public class Operator {
@@ -618,7 +638,7 @@ public class ExecutableLine extends AsmLine{
 		}
 
 		private String getRfString() {
-			String leftRf = "11";
+			String leftRf = "00";
 			String rightRf= "00";
 			if (isResultForwarding)
 			{
@@ -678,6 +698,10 @@ public class ExecutableLine extends AsmLine{
 	public void endExecution() {
 		execStatus = ExecutionStatus.wbFinishedStatus;		
 	}
+	public void startResultForwarding() {
+		execStatus = ExecutionStatus.resultForwardedStatus;
+	}
+	
 	public Operand getOperandOut() {
 		return operandOut;
 	}

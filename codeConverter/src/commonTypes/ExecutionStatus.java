@@ -6,5 +6,6 @@ public enum ExecutionStatus {
 	permittedStatus,
 	startedStatus,
 	aluFinishedStatus,
+	resultForwardedStatus,
 	wbFinishedStatus
 }

@@ -52,8 +52,6 @@ public abstract class Optimiser {
 	private ArrayList<ExecutableLine> findReadyNodes(ArrayList<ExecutableLine> executableCode){
 		ArrayList<ExecutableLine> readyCommands = new ArrayList<ExecutableLine>();
 		
-		//for (int i = 0; i < executableCode.size(); i++){
-			//ExecutableLine ex = executableCode.get(i);
 		
 		for (Integer i : checkList.keySet()){
 			ExecutableLine ex = checkList.get(i);
@@ -62,8 +60,6 @@ public abstract class Optimiser {
 				readyCommands.add(ex);
 			}
 		}
-/*		if (!readyCommands.isEmpty())
-			System.out.println(readyCommands.toString());*/
 		return readyCommands;		
 	}
 	
@@ -117,7 +113,7 @@ public abstract class Optimiser {
 				startWriteBack(takt);
 			}
 			else {
-				executionInAluStarted = startExecutionInAlu(takt);
+				executionInAluStarted = chooseAndStartNode(takt);
 			}
 			
 			if (!executionInAluStarted)
@@ -148,9 +144,14 @@ public abstract class Optimiser {
 	private void doNothing() {
 		linesList.add("003800000");		
 	}
-
-	private boolean startExecutionInAlu(int takt) {
+	
+	private boolean chooseAndStartNode(int takt){
 		ExecutableLine ex = chooseNode();
+		boolean success = startExecutionInAlu(ex, takt);
+		return success;
+	}
+
+	private boolean startExecutionInAlu(ExecutableLine ex, int takt) {	
 		if (ex != null) {
 			Operator operator = ex.getOperator();
 			boolean taktOccupiedWithWb = isTaktOccupiedWithWb(takt + operator.getAluDelay());	
@@ -168,6 +169,7 @@ public abstract class Optimiser {
 				else {
 					writeBackMap.put(takt + operator.getAluDelay(), ex);
 				}
+				System.out.println("started " + ex);
 				return true;
 			}
 			else {
@@ -182,14 +184,45 @@ public abstract class Optimiser {
 	private void startWriteBack(int takt){
 		ExecutableLine ex = writeBackMap.get(takt);
 		Operator operator = ex.getOperator();
+		
+		if (ex.canBeForwarded()){
+			boolean rf = tryResultForwarding(ex, takt-1);
+			if (rf)
+				return;
+		} else {
+			addDescendantsToCheckList(ex);	
+		}
+
 		ex.startWriteBack();
-		addDescendantsToCheckList(ex);	
-		
-		linesList.add(operator.getWriteBackOperation());
-
+					
+		linesList.add(operator.getWriteBackOperation());	
 		endOfOpMap.put(takt + operator.getPipeDelay() - 1, ex);
-		
+	}
 
+
+	private boolean tryResultForwarding(ExecutableLine ex, int takt) {
+		boolean success = true;
+		
+		ExecutionStatus status = ex.getExecStatus();
+		ex.startResultForwarding();
+		
+		ExecutableLine nextEx = ex.descendants.get(0);
+		int nodeIndex = nextEx.getNodeIndex();
+		checkList.put(nodeIndex, nextEx);
+		nextEx.setExecStatus(executableCode);
+		if (nextEx.getExecStatus() == ExecutionStatus.permittedStatus){
+			System.out.println("heheu");
+			startExecutionInAlu(nextEx, takt);
+			ex.endExecution();
+			numberOfCommandsExecuted++;
+			return success;
+		}
+		else {
+			success = false;
+			ex.setExecStatus(status);
+			return false;
+		}
+		
 	}
 	
 	private void endExecution(int takt) {
@@ -262,12 +295,26 @@ public abstract class Optimiser {
 			ResultForwardingItem rf = null;
 			if (ancestor.canBeForwarded()){
 				ExecutableLine descendant = ancestor.descendants.get(0);
-				while (descendant.canAcceptForwarding() && ancestor.canBeForwarded()){
+				while (descendant.canAcceptForwarding()){
 					if (rf == null){
 						rf = new ResultForwardingItem(ancestor, descendant);	
 					} else {
-						rf.descendants.add(descendant);
+						rf.addExecutableLine(descendant);
 					}
+					ancestor = descendant;
+					if (ancestor.canBeForwarded()){
+						ancestor.setResultForwarding(true);	
+						
+						// TODO change it during optimization not here
+						ancestor.setRfCalculationOperation();
+						
+						descendant = ancestor.descendants.get(0);
+					} else {
+						break;
+					}
+					
+				}
+				if (rf != null){
 					resultForwardingList.add(rf);
 				}
 			}
