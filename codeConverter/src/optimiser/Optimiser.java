@@ -101,7 +101,6 @@ public abstract class Optimiser {
 	}
 	
 	public ArrayList<String> optimiseProgramCode(ProgramCode pcode){
-		
 		executableCode = pcode.getExecutableCode();
 		numberOfCommandsToExecute = executableCode.size();
 
@@ -130,12 +129,13 @@ public abstract class Optimiser {
 			
 			if (taktOccupiedWithWb){
 				writeBackStarted = startWriteBack(takt);
+				System.out.println(" - wb started = " + writeBackStarted);
 			}
 			else {
 				executionInAluStarted = chooseAndStartNode(takt);
 			}
 			
-			if (!writeBackStarted && !executionInAluStarted)
+			if (!writeBackStarted && !executionInAluStarted && !taktOccupiedWithWb)
 				doNothing();
 			
 			
@@ -187,7 +187,9 @@ public abstract class Optimiser {
 					endOfOpMap.put(takt + operator.getPipeDelay(), ex);
 				}
 				else {
-					writeBackMap.put(takt + operator.getAluDelay(), ex);
+					int writeBackTakt = takt + operator.getAluDelay();
+					writeBackMap.put(writeBackTakt, ex);
+					System.out.println(" - will end at " + writeBackTakt);
 				}
 				startOpMap.put(takt, ex);
 				System.out.println(" - started " + ex.getNodeIndex());
@@ -206,11 +208,16 @@ public abstract class Optimiser {
 		ExecutableLine ex = writeBackMap.get(takt);
 		Operator operator = ex.getOperator();
 		
+		System.out.println(" - try to wb " + ex);
+		
 		if (resultForwardingMap.containsKey(ex)){
+			System.out.println(" -     contains key for rf" + ex);
 			int size = resultForwardingMap.get(ex).getExLines().size(); 
 			if (size > 1) {
+				System.out.println(" -     size is ok");
 				boolean rf = tryResultForwarding(ex, takt-1);
 				if (rf) {
+					System.out.println(" -     result forwarding started");
 					return true;
 				}
 			}

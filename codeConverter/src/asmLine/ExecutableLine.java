@@ -40,6 +40,7 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 	}
 	
 	private boolean isLeftOperandRf = false;
+	
 	private boolean isRightOperandRf = false;
 
 	private int leftOperandRf_delay = 0;	
@@ -564,14 +565,17 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 	
 	public void setRfCalculationOperation(ExecutableLine ex){
 		if (ex.equals(this.leftAncestor)) {
+			System.out.println(" - is left ancestor");
 			leftOperandRf_delay = 1;
 			isLeftOperandRf = true;
 		} 
 		// TODO implement in ViSARD core
 		else if (ex.equals(this.rightAncestor)) {
+			System.out.println(" - is right ancestor");
 			rightOperandRf_delay = 1;
 			isRightOperandRf = true;
 		}
+		isResultForwarding = true;
 		operator.setCalculationOperation();
 	}
 	
@@ -652,6 +656,7 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 
 		private String getRf_hex() {
 			int Rf_dec = Integer.parseInt(getRfString(),2);
+			System.out.println(" - rf dec = " + Rf_dec);
 			String Rf_hex  = Integer.toString(Rf_dec, 16);
 			return Rf_hex;
 		}
@@ -661,14 +666,17 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 			String rightRf= "00";
 			if (isResultForwarding)
 			{
-				if (isLeftOperandRf){
+				if (isLeftOperandRf){					
 					leftRf = Integer.toBinaryString(leftOperandRf_delay);
+					System.out.println(" left  - " + leftOperandRf_delay);
 				}
-				if (isRightOperandRf){
+				if (isRightOperandRf){					
 					rightRf = Integer.toBinaryString(rightOperandRf_delay);
+					System.out.println(" right - " +rightOperandRf_delay);
 				}
 			}
-			return leftRf + rightRf;
+			System.out.println(" - rf " + (leftRf + rightRf));
+			return (leftRf + rightRf);
 		}
 				
 		public void setWriteBackOperation(){
