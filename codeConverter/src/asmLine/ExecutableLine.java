@@ -11,7 +11,7 @@ import errorHandler.ErrorType;
 import operand.Operand;
 import operand.OperandType;
 
-public class ExecutableLine extends AsmLine{
+public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine>{
 	
 	ExecutionStatus execStatus = ExecutionStatus.illegalStatus;
 	private boolean asmLineOk = false;
@@ -332,7 +332,6 @@ public class ExecutableLine extends AsmLine{
 				descendants.add(ex);
 			}
 		}	
-		System.out.println("Descendants of"+ this.toString() + ":" + descendants.toString());
 	}
 	
 	
@@ -501,10 +500,21 @@ public class ExecutableLine extends AsmLine{
 			return false;
 	}
 	
-	public void setExecStatus(ArrayList<ExecutableLine> executableCode){
+	public void setExecStatus(ArrayList<ExecutableLine> executableCode, IOPort port){
 		//TODO: Add other conditions
+		if (isOutputCommand() || isInputCommand()){
+			if (!this.equals(port.queue.peek()))
+				return;
+		}
 		if ((getReadNodesExecuted(executableCode)) && (getAncestorsExecuted(executableCode)) && (!alreadyStarted()))
 			this.execStatus = ExecutionStatus.permittedStatus;
+	}
+	
+	public boolean isOutputCommand(){
+		return this.getCmdType() == CommandType.outputCommand;
+	}
+	public boolean isInputCommand(){
+		return this.getCmdType() == CommandType.inputCommand;
 	}
 	
 	public boolean isMultiplication(){
@@ -655,7 +665,7 @@ public class ExecutableLine extends AsmLine{
 					leftRf = Integer.toBinaryString(leftOperandRf_delay);
 				}
 				if (isRightOperandRf){
-					rightRf = Integer.toBinaryString(leftOperandRf_delay);
+					rightRf = Integer.toBinaryString(rightOperandRf_delay);
 				}
 			}
 			return leftRf + rightRf;
@@ -716,5 +726,18 @@ public class ExecutableLine extends AsmLine{
 	}
 	public void setOperandOut(Operand operandOut) {
 		this.operandOut = operandOut;
+	}
+	@Override
+	public int compareTo(ExecutableLine o) {
+		if (this.nodeIndex > o.nodeIndex){
+			return +1;
+		} else if (this.nodeIndex < o.nodeIndex){
+			return -1;
+		}
+		return 0;
 	}	
+	
+	public String toString(){
+		return (nodeIndex + " " + mOperator + " " + mOperandIn1 + " " + mOperandIn2 + " " + mOperandOut);
+	}
 }

@@ -190,4 +190,13 @@ public class AsmLine {
 		System.out.println(myLine.isDoubleHexadecimal("0x400800000000000D") + "  " + myLine.isDoubleHexadecimal("0x400800000000000D") + "  " + myLine.isDoubleHexadecimal("0x400800000000000D") );
 	}
 
+	public int compareTo(ExecutableLine o) {
+		if (this.index > o.getIndex()){
+			return +1;
+		} else if (this.index < o.getIndex()){
+			return -1;
+		}
+		return 0;
+	}
+
 }

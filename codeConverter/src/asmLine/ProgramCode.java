@@ -98,11 +98,6 @@ public class ProgramCode {
 		if (!executableCodeOk)
 			return;
 		
-		//checkDeclarations();
-		
-		for (ExecutableLine ex: executableCode){
-			ex.getOperandsInfo();
-		}
 		
 		datamem.initializeMemoryFile(this, precType);
 		datamem.fillMemoryFile(fileSystem.getDataMemoryFilePath());

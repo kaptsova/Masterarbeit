@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import asmLine.ExecutableLine;
 import asmLine.ExecutableLine.Operator;
+import asmLine.IOPort;
 import asmLine.ProgramCode;
 import asmLine.ResultForwardingItem;
 import commonTypes.CommandType;
@@ -16,14 +17,15 @@ public abstract class Optimiser {
 	
 	ArrayList<ExecutableLine> toBeExecutedNodes = new ArrayList<ExecutableLine>();
 	ArrayList<String> linesList = new ArrayList<String>();
+	// TODO implement multiple IO-Ports both in compiler and in ViSARD
+	IOPort port = new IOPort();
 	
 	HashMap<Integer, ExecutableLine> startOpMap = new HashMap<Integer, ExecutableLine>();
 	HashMap<Integer, ExecutableLine> writeBackMap = new HashMap <Integer,ExecutableLine>();
 	HashMap<Integer, ExecutableLine> endOfOpMap = new HashMap <Integer, ExecutableLine>();
-	HashMap <Integer, ExecutableLine> checkList = new HashMap<Integer, ExecutableLine>();
+	HashMap <Integer, ExecutableLine> checkMap = new HashMap<Integer, ExecutableLine>();
 	
 	ArrayList<ExecutableLine> executableCode = null;
-	ArrayList<ResultForwardingItem> resultForwardingList = new ArrayList<ResultForwardingItem>();
 	
 	HashMap<ExecutableLine, ResultForwardingItem> resultForwardingMap = new HashMap<ExecutableLine, ResultForwardingItem>();
 	
@@ -34,6 +36,17 @@ public abstract class Optimiser {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public void initIOPort(ArrayList<ExecutableLine> executableCode){
+		for (ExecutableLine ex: executableCode){
+			if (ex.getCmdType() == CommandType.inputCommand) {
+				port.queue.add(ex);
+			}
+			if (ex.getCmdType() == CommandType.outputCommand) {
+				port.queue.add(ex);
+			}
+		}
+	}
+	
 	
 	private HashMap<Integer, ExecutableLine> findFirstNodesToBeChecked(){
 		for (int i = 0; i < executableCode.size(); i++){
@@ -42,10 +55,10 @@ public abstract class Optimiser {
 			int firstLevel = 1;
 			int nodeIndex = ex.getNodeIndex();
 			if (levelInGraph == firstLevel){
-				checkList.put(nodeIndex, ex);
+				checkMap.put(nodeIndex, ex);
 			}
 		}
-		return checkList;
+		return checkMap;
 	}
 	
 	//TODO return a list of ready-to start executable commands
@@ -53,9 +66,9 @@ public abstract class Optimiser {
 		ArrayList<ExecutableLine> readyCommands = new ArrayList<ExecutableLine>();
 		
 		
-		for (Integer i : checkList.keySet()){
-			ExecutableLine ex = checkList.get(i);
-			ex.setExecStatus(executableCode);
+		for (Integer i : checkMap.keySet()){
+			ExecutableLine ex = checkMap.get(i);
+			ex.setExecStatus(executableCode, port);
 			if (ex.getExecStatus() == ExecutionStatus.permittedStatus){
 				readyCommands.add(ex);
 			}
@@ -96,25 +109,33 @@ public abstract class Optimiser {
 		
 		constructGraph(pcode.getExecutableCode());
 		
+		for (ExecutableLine ex : executableCode){
+			ex.getOperandsInfo();
+		}
+		
+		initIOPort(executableCode);
+		
 		recognizeBypass();
-		System.out.println("RF LIST" +resultForwardingList);
+
 		findFirstNodesToBeChecked();
 			
 		while (numberOfCommandsExecuted < numberOfCommandsToExecute){
+			System.out.println("takt: " + takt);
 			readyNodes = findReadyNodes(executableCode);
 
 			boolean taktOccupiedWithWb = isTaktOccupiedWithWb(takt);
 			boolean resultWrittenBack = isResultWrittenBack(takt);
 			boolean executionInAluStarted = false;
+			boolean writeBackStarted = false;
 			
 			if (taktOccupiedWithWb){
-				startWriteBack(takt);
+				writeBackStarted = startWriteBack(takt);
 			}
 			else {
 				executionInAluStarted = chooseAndStartNode(takt);
 			}
 			
-			if (!executionInAluStarted)
+			if (!writeBackStarted && !executionInAluStarted)
 				doNothing();
 			
 			
@@ -124,14 +145,14 @@ public abstract class Optimiser {
 				System.out.println(numberOfCommandsExecuted + " of " + numberOfCommandsToExecute);
 			}
 			
-						
+			System.out.println(" - rf" + resultForwardingMap.toString() + "\n - ready " + readyNodes);
+			
 			takt++;
 			
 			//-------------------------------------------------------
 			// For test-purposes only
-			// TODO: remove
-			
-			if (takt > 100)
+			// TODO: remove			
+			if (takt > 300)
 				break;
 		}
 		
@@ -158,8 +179,9 @@ public abstract class Optimiser {
 			if (!taktOccupiedWithWb){
 				ex.start();
 				
+				
 				linesList.add(operator.getCalculationOperation());
-				checkList.remove(ex.getNodeIndex());
+				checkMap.remove(ex.getNodeIndex());
 
 				if ((ex.getCmdType() == CommandType.outputCommand) || (ex.getCmdType() == CommandType.inputCommand)) {
 					endOfOpMap.put(takt + operator.getPipeDelay(), ex);
@@ -168,7 +190,7 @@ public abstract class Optimiser {
 					writeBackMap.put(takt + operator.getAluDelay(), ex);
 				}
 				startOpMap.put(takt, ex);
-				System.out.println("started " + ex);
+				System.out.println(" - started " + ex.getNodeIndex());
 				return true;
 			}
 			else {
@@ -180,7 +202,7 @@ public abstract class Optimiser {
 		}
 	}
 	
-	private void startWriteBack(int takt){
+	private boolean startWriteBack(int takt){
 		ExecutableLine ex = writeBackMap.get(takt);
 		Operator operator = ex.getOperator();
 		
@@ -189,17 +211,23 @@ public abstract class Optimiser {
 			if (size > 1) {
 				boolean rf = tryResultForwarding(ex, takt-1);
 				if (rf) {
-					return;
+					return true;
 				}
 			}
-		} else {
+			else {
+				resultForwardingMap.remove(ex);
+			}
+		} 
+		//else {
+			System.out.println(" - writeback" + ex);
 			addDescendantsToCheckList(ex);	
-		}
+		//}
 
 		ex.startWriteBack();
 					
 		linesList.add(operator.getWriteBackOperation());	
 		endOfOpMap.put(takt + operator.getPipeDelay() - 1, ex);
+		return true;
 	}
 
 	// TODO try to implement delay up to 3 takts, if takt is occupied
@@ -212,19 +240,23 @@ public abstract class Optimiser {
 		
 		ExecutableLine nextEx = ex.descendants.get(0);
 		int nodeIndex = nextEx.getNodeIndex();
-		checkList.put(nodeIndex, nextEx);
-		nextEx.setExecStatus(executableCode);
+		checkMap.put(nodeIndex, nextEx);
+		nextEx.setExecStatus(executableCode, port);
 		
 		if ((nextEx.getExecStatus() == ExecutionStatus.permittedStatus) && (!isTaktOccupied(takt))){
 			startExecutionRf(ex, nextEx, takt);
 			numberOfCommandsExecuted++;
 			updateRfMap(ex, nextEx);
+			System.out.println(" - bypass " + ex + " to " + nextEx );
 			return success;
 		}
 		else {
+			System.out.println(" - failed -" + ex + nextEx + "taktOccupied" + !isTaktOccupied(takt) + "\nstatus" + nextEx.getExecStatus());
+			
 			updateRfMap(ex, nextEx);
 			success = false;
 			ex.setExecStatus(status);
+			nextEx.setExecStatus(executableCode, port);
 			return false;
 		}
 		
@@ -247,8 +279,12 @@ public abstract class Optimiser {
 	
 	private void endExecution(int takt) {
 		ExecutableLine ex = endOfOpMap.get(takt);
-		addDescendantsToCheckList(ex);	
+		addDescendantsToCheckList(ex);
 		
+		if ((ex.getCmdType() == CommandType.outputCommand) || (ex.getCmdType() == CommandType.inputCommand)) {
+			port.queue.remove();
+		}
+		System.out.println(" - ended " + ex);
 		ex.endExecution();
 		
 
@@ -263,8 +299,8 @@ public abstract class Optimiser {
 		for (int i = lowerBound; i <= upperBound; i++){
 			if (readAccessList.contains(i)){
 				ExecutableLine follower = executableCode.get(i-1);
-				if (!checkList.containsKey(i)){
-					checkList.put(i, follower);
+				if (!checkMap.containsKey(i)){
+					checkMap.put(i, follower);
 				}
 			}
 		}		
@@ -345,7 +381,6 @@ public abstract class Optimiser {
 				}
 				if (rf != null){
 					resultForwardingMap.putIfAbsent(ex, rf);
-					resultForwardingList.add(rf);
 				}
 			}
 		}
