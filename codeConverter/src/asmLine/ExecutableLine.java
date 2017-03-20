@@ -113,6 +113,12 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 		return execStatus;		
 	}
 	
+	/*
+	 * @brief
+	 * @param
+	 * @param
+	 * @return
+	 */
 	public boolean checkAssemblerLine(ProgramCode pcode, ArrayList<OpCode> opCodeList, ArrayList<DeclarationLine> declarations)
 	{
 		// Status variables
@@ -143,11 +149,12 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 		}
 		
 		// If (at least) operand type is wrong -> assembler line is wrong
-		if ( operandTypesOk == false)
+		if ( operandTypesOk == false){
 			return false;
-		else
-			//operandVariablesOk = checkOperandVariables(declarations);
+		}
+		else {
 			operandVariablesOk = checkOperandValues(pcode.operands);
+		}
 		
 
 		asmLineOk = mnemonicOk && operandTypesOk && operandVariablesOk;
@@ -218,26 +225,26 @@ public class ExecutableLine extends AsmLine implements Comparable<ExecutableLine
 	}
 	
 	// TODO handle error in errorMessage.java class
-		private boolean typesFound(){
-			if (operandIn1.getOpType().equals(OperandType.illegalOperand)){
-				ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpIn1TypeError, getIndex(), filePath);
-				errMsg.printToFile();
-				return false;
-			}
-			if (operandIn2.getOpType().equals(OperandType.illegalOperand)){
-				ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpIn2TypeError, getIndex(), filePath);
-				errMsg.printToFile();
-				return false;
-			}
-			if (getOperandOut().getOpType().equals(OperandType.illegalOperand)){
-				ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpOutTypeError, getIndex(), filePath);
-				errMsg.printToFile();
-				return false;
-			}
-			
-			return true;
+	private boolean typesFound(){
+		if (operandIn1.getOpType().equals(OperandType.illegalOperand)){
+			ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpIn1TypeError, getIndex(), filePath);
+			errMsg.printToFile();
+			return false;
 		}
-	
+		if (operandIn2.getOpType().equals(OperandType.illegalOperand)){
+			ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpIn2TypeError, getIndex(), filePath);
+			errMsg.printToFile();
+			return false;
+		}
+		if (getOperandOut().getOpType().equals(OperandType.illegalOperand)){
+			ErrorMessage errMsg = new ErrorMessage(ErrorType.wrongOpOutTypeError, getIndex(), filePath);
+			errMsg.printToFile();
+			return false;
+		}
+		
+		return true;
+	}
+
 	
 	
 	private boolean checkOperandValues(HashMap<String, Operand> operands){

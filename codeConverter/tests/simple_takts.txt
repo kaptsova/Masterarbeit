@@ -1,0 +1,420 @@
+In file system - console
+Enter the number of files: 
+1
+0: Enter the name of an ASM-file you want to work with (without .txt): 
+simple_values
+File 0: tests\simple_values.txt
+Data memory file path: tests\simple_values-data.txt
+Program memory file path: tests\simple_values-prog.txt
+Common info file path: tests\simple_values-info.txt
+Error file path: tests\simple_values-error.txt
+OpCode file path: tests\opcodes_dbl.txt
+
+avoid = 0x0000000000000000 address 0 = 00000000
+x = 0x4000000000000000 address 1 = 00000001
+z = 0x4010000000000000 address 2 = 00000010
+y = 0x4028000000000000 address 3 = 00000011
+q = 0x4010000000000000 address 4 = 00000100
+u = 0x3FD0000000000000 address 5 = 00000101
+p = 0x4014000000000000 address 6 = 00000110
+l = 0x4018000000000000 address 7 = 00000111
+w = 0x405A400000000000 address 8 = 00001000
+v = 0x4014000000000000 address 9 = 00001001
+x_plus_z = 0x0000000000000000 address 10 = 00001010
+y_div_xz = 0x0000000000000000 address 11 = 00001011
+q_mul_u = 0x0000000000000000 address 12 = 00001100
+p_mul_l = 0x0000000000000000 address 13 = 00001101
+v_plus_pl = 0x0000000000000000 address 14 = 00001110
+w_div_vpl = 0x0000000000000000 address 15 = 00001111
+yxz_sub_qu = 0x0000000000000000 address 16 = 00010000
+a = 0x0000000000000000 address 17 = 00010001
+1 add x z x_plus_z2 div y x_plus_z y_div_xz3 out y_div_xz ? 04 mul q u q_mul_u5 out q_mul_u ? 06 mul p l p_mul_l7 add v p_mul_l v_plus_pl8 div w v_plus_pl w_div_vpl9 out w_div_vpl ? 010 sub y_div_xz q_mul_u yxz_sub_qu11 add yxz_sub_qu w_div_vpl a12 out a ? 0
+--------------------------------
+add index: 1 level: 1
+	 operand :x
+		 read- 1, 
+		 write- 
+	 operand :z
+		 read- 1, 
+		 write- 
+	 operand :x_plus_z
+		 read- 2, 
+		 write- 1, 
+--------------------------------
+div index: 2 level: 2
+	 operand :y
+		 read- 2, 
+		 write- 
+	 operand :x_plus_z
+		 read- 2, 
+		 write- 1, 
+	 operand :y_div_xz
+		 read- 3, 10, 
+		 write- 2, 
+--------------------------------
+out index: 3 level: 3
+	 operand :y_div_xz
+		 read- 3, 10, 
+		 write- 2, 
+	 operand :?
+		 read- 
+		 write- 
+	 operand :0
+		 read- 
+		 write- 
+--------------------------------
+mul index: 4 level: 1
+	 operand :q
+		 read- 4, 
+		 write- 
+	 operand :u
+		 read- 4, 
+		 write- 
+	 operand :q_mul_u
+		 read- 5, 10, 
+		 write- 4, 
+--------------------------------
+out index: 5 level: 2
+	 operand :q_mul_u
+		 read- 5, 10, 
+		 write- 4, 
+	 operand :?
+		 read- 
+		 write- 
+	 operand :0
+		 read- 
+		 write- 
+--------------------------------
+mul index: 6 level: 1
+	 operand :p
+		 read- 6, 
+		 write- 
+	 operand :l
+		 read- 6, 
+		 write- 
+	 operand :p_mul_l
+		 read- 7, 
+		 write- 6, 
+--------------------------------
+add index: 7 level: 2
+	 operand :v
+		 read- 7, 
+		 write- 
+	 operand :p_mul_l
+		 read- 7, 
+		 write- 6, 
+	 operand :v_plus_pl
+		 read- 8, 
+		 write- 7, 
+--------------------------------
+div index: 8 level: 3
+	 operand :w
+		 read- 8, 
+		 write- 
+	 operand :v_plus_pl
+		 read- 8, 
+		 write- 7, 
+	 operand :w_div_vpl
+		 read- 9, 11, 
+		 write- 8, 
+--------------------------------
+out index: 9 level: 4
+	 operand :w_div_vpl
+		 read- 9, 11, 
+		 write- 8, 
+	 operand :?
+		 read- 
+		 write- 
+	 operand :0
+		 read- 
+		 write- 
+--------------------------------
+sub index: 10 level: 3
+	 operand :y_div_xz
+		 read- 3, 10, 
+		 write- 2, 
+	 operand :q_mul_u
+		 read- 5, 10, 
+		 write- 4, 
+	 operand :yxz_sub_qu
+		 read- 11, 
+		 write- 10, 
+--------------------------------
+add index: 11 level: 4
+	 operand :yxz_sub_qu
+		 read- 11, 
+		 write- 10, 
+	 operand :w_div_vpl
+		 read- 9, 11, 
+		 write- 8, 
+	 operand :a
+		 read- 12, 
+		 write- 11, 
+--------------------------------
+out index: 12 level: 5
+	 operand :a
+		 read- 12, 
+		 write- 11, 
+	 operand :?
+		 read- 
+		 write- 
+	 operand :0
+		 read- 
+		 write- 
+takt: 0
+ - started 4
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready [1 add x z x_plus_z, 4 mul q u q_mul_u, 6 mul p l p_mul_l]
+takt: 1
+ - started 6
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready [1 add x z x_plus_z, 6 mul p l p_mul_l]
+takt: 2
+ - started 1
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready [1 add x z x_plus_z]
+takt: 3
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 4
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 5
+ - rf{1 add x z x_plus_z=[1 add x z x_plus_z, 2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 6
+ - started 2
+ - bypass 1 add x z x_plus_z to 2 div y x_plus_z y_div_xz
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 7
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 8
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 9
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 10
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 11
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 12
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 13
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 14
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 15
+ - writeback4 mul q u q_mul_u
+ - rf{2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a], 6 mul p l p_mul_l=[6 mul p l p_mul_l, 7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl]}
+ - ready []
+takt: 16
+ - started 7
+ - bypass 6 mul p l p_mul_l to 7 add v p_mul_l v_plus_pl
+ - rf{7 add v p_mul_l v_plus_pl=[7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 17
+ - ended 4 mul q u q_mul_u
+3 of 12
+ - rf{7 add v p_mul_l v_plus_pl=[7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 18
+ - rf{7 add v p_mul_l v_plus_pl=[7 add v p_mul_l v_plus_pl, 8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 19
+ - started 8
+ - bypass 7 add v p_mul_l v_plus_pl to 8 div w v_plus_pl w_div_vpl
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 20
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 21
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 22
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 23
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 24
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 25
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 26
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 27
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 28
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 29
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 30
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 31
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 32
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 33
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 34
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 35
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 36
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 37
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 38
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 39
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 40
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 41
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 42
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 43
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 44
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 2 div y x_plus_z y_div_xz=[2 div y x_plus_z y_div_xz], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 45
+ - writeback2 div y x_plus_z y_div_xz
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 46
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 47
+ - ended 2 div y x_plus_z y_div_xz
+5 of 12
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 48
+ - started 10
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready [3 out y_div_xz ? 0, 10 sub y_div_xz q_mul_u yxz_sub_qu]
+takt: 49
+ - started 3
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready [3 out y_div_xz ? 0]
+takt: 50
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 51
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 10 sub y_div_xz q_mul_u yxz_sub_qu=[10 sub y_div_xz q_mul_u yxz_sub_qu, 11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 52
+ - failed -10 sub y_div_xz q_mul_u yxz_sub_qu11 add yxz_sub_qu w_div_vpl ataktOccupiedtrue
+statusnotPermittedStatus
+ - writeback10 sub y_div_xz q_mul_u yxz_sub_qu
+ - ended 3 out y_div_xz ? 0
+6 of 12
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 53
+ - started 5
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready [5 out q_mul_u ? 0]
+takt: 54
+ - ended 10 sub y_div_xz q_mul_u yxz_sub_qu
+7 of 12
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 55
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 56
+ - ended 5 out q_mul_u ? 0
+8 of 12
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 57
+ - rf{8 div w v_plus_pl w_div_vpl=[8 div w v_plus_pl w_div_vpl], 11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 58
+ - writeback8 div w v_plus_pl w_div_vpl
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 59
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 60
+ - ended 8 div w v_plus_pl w_div_vpl
+9 of 12
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 61
+ - started 11
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready [9 out w_div_vpl ? 0, 11 add yxz_sub_qu w_div_vpl a]
+takt: 62
+ - started 9
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready [9 out w_div_vpl ? 0]
+takt: 63
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 64
+ - rf{11 add yxz_sub_qu w_div_vpl a=[11 add yxz_sub_qu w_div_vpl a]}
+ - ready []
+takt: 65
+ - writeback11 add yxz_sub_qu w_div_vpl a
+ - ended 9 out w_div_vpl ? 0
+10 of 12
+ - rf{}
+ - ready []
+takt: 66
+ - rf{}
+ - ready []
+takt: 67
+ - ended 11 add yxz_sub_qu w_div_vpl a
+11 of 12
+ - rf{}
+ - ready []
+takt: 68
+ - started 12
+ - rf{}
+ - ready [12 out a ? 0]
+takt: 69
+ - rf{}
+ - ready []
+takt: 70
+ - rf{}
+ - ready []
+takt: 71
+ - ended 12 out a ? 0
+12 of 12
+ - rf{}
+ - ready []
+______________________________

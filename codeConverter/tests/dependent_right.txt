@@ -1,0 +1,20 @@
+; dependent commands
+; A = ((B + C) * D) / E + F
+dq avoid 	? 0x0000000000000000
+dq A 		? 0x0000000000000000
+dq b 		? 0x401C000000000000	; 7fgdfgd
+dq C 		? 0x4000000000000000	; 2
+dq D 		? 0x4014000000000000	; 5
+dq E 		? 0x4022000000000000	; 9
+dq F 		? 0x401199999999999A	; 4.4
+
+dq b_plus_c 	? 0x0000000000000000
+dq bc_mul_d 	? 0x0000000000000000
+dq bcd_div_e 	? 0x0000000000000012
+
+add b b b_plus_c
+mul b_plus_c D bc_mul_d ;sdfs
+div e bc_mul_d bcd_div_e
+add bcd_div_e f A
+
+out A ? 0

@@ -61,7 +61,6 @@ public abstract class Optimiser {
 		return checkMap;
 	}
 	
-	//TODO return a list of ready-to start executable commands
 	private ArrayList<ExecutableLine> findReadyNodes(ArrayList<ExecutableLine> executableCode){
 		ArrayList<ExecutableLine> readyCommands = new ArrayList<ExecutableLine>();
 		
@@ -136,6 +135,7 @@ public abstract class Optimiser {
 			}
 			
 			if (!writeBackStarted && !executionInAluStarted && !taktOccupiedWithWb)
+			//if (!executionInAluStarted)
 				doNothing();
 			
 			
@@ -161,6 +161,7 @@ public abstract class Optimiser {
 
 
 	private void doNothing() {
+		System.out.println(" - takt: nop");
 		linesList.add("003800000");		
 	}
 	
@@ -179,7 +180,7 @@ public abstract class Optimiser {
 			if (!taktOccupiedWithWb){
 				ex.start();
 				
-				
+				System.out.println(" - takt: calc operation");
 				linesList.add(operator.getCalculationOperation());
 				checkMap.remove(ex.getNodeIndex());
 
@@ -215,7 +216,7 @@ public abstract class Optimiser {
 			int size = resultForwardingMap.get(ex).getExLines().size(); 
 			if (size > 1) {
 				System.out.println(" -     size is ok");
-				boolean rf = tryResultForwarding(ex, takt-1);
+				boolean rf = tryResultForwarding(ex, takt);
 				if (rf) {
 					System.out.println(" -     result forwarding started");
 					return true;
@@ -232,8 +233,10 @@ public abstract class Optimiser {
 
 		ex.startWriteBack();
 					
+		
+		System.out.println(" - takt: write-back operation");
 		linesList.add(operator.getWriteBackOperation());	
-		endOfOpMap.put(takt + operator.getPipeDelay() - 1, ex);
+		endOfOpMap.put(takt + operator.getPipeDelay(), ex);
 		return true;
 	}
 
@@ -292,8 +295,7 @@ public abstract class Optimiser {
 			port.queue.remove();
 		}
 		System.out.println(" - ended " + ex);
-		ex.endExecution();
-		
+		ex.endExecution();	
 
 	}
 
