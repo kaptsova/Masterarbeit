@@ -1,2 +1,2 @@
 Error 1 of 1 (multiplyDeclaredVariableError) occured
-	Details: multiple declared variable suspended
+	Details: avoid multiple declared variable suspended

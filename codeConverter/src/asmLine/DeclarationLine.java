@@ -3,6 +3,8 @@ package asmLine;
 import java.util.ArrayList;
 
 import commonTypes.CommandType;
+import errorHandler.ErrorMessage;
+import errorHandler.ErrorType;
 import operand.OperandType;
 
 public class DeclarationLine extends AsmLine{
@@ -103,6 +105,26 @@ public class DeclarationLine extends AsmLine{
 				writeAccessList.add(ex.getIndex());
 			}
 		}		
+	}
+	
+	public boolean isAlreadyDefined(ArrayList<DeclarationLine> declarationCode){
+		boolean alreadyInList = false;
+		String name = this.getmOperandIn1();
+		for (AsmLine line : declarationCode){
+			String lineName = line.getmOperandIn1();
+			if (name.equalsIgnoreCase(lineName)){
+				alreadyInList = true;
+				handleMultipleDeclaration();
+				return alreadyInList;
+			}			
+		}
+		return alreadyInList;
+	}
+	private void handleMultipleDeclaration() {
+		numberOfVariables--;
+		ErrorMessage errMsg = new ErrorMessage(ErrorType.multiplyDeclaredVariableError, getIndex());
+		errMsg.addDescription(this.mOperandIn1 + " multiple declared variable suspended");
+		errMsg.printToFile();
 	}
 
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import asmLine.ExecutableLine.Operator;
+import codeConverter.ProgramCode;
 import commonTypes.CommandType;
 import commonTypes.ExecutionStatus;
 import errorHandler.ErrorMessage;

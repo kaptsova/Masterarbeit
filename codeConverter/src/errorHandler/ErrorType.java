@@ -23,7 +23,7 @@ public enum ErrorType {
 	delayError,
 	wrongPrecisionError,
 	
-	multiplyDeclaredcVariableError, 	
+	multiplyDeclaredVariableError, 	
 	undeclaredVariableError,	
 	
 }

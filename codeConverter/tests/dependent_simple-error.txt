@@ -1,0 +1,4 @@
+Error 1 of 1 (multiplyDeclaredVariableError) occured
+	Details: avoid multiple declared variable suspended
+Error 2 of 2 (multiplyDeclaredVariableError) occured
+	Details: a multiple declared variable suspended

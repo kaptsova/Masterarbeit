@@ -1,4 +1,4 @@
-dq avoid ? 0x0000000000000000
+dq avoid1 ? 0x0000000000000000
 ; input variables
 dq x ? 0x4000000000000000	; 2
 dq z ? 0x4010000000000000	; 4
@@ -33,6 +33,6 @@ add v p_mul_l v_plus_pl
 div w v_plus_pl w_div_vpl
 out w_div_vpl ? 0
 
-sub y_div_xz q_mul_u yxz_sub_qu
+add y_div_xz q_mul_u yxz_sub_qu
 add yxz_sub_qu w_div_vpl res
 out res ? 0

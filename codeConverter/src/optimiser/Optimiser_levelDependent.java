@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import asmLine.ExecutableLine;
 
-public abstract class Optimiser_levelDependent extends Optimiser {
+public abstract class Optimiser_levelDependent extends Optimizer {
 
 	public void constructGraph(ArrayList<ExecutableLine> executableCode){
 		constructConnectionsBetweenNodes(executableCode);

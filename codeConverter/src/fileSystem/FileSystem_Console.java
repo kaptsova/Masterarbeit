@@ -48,6 +48,7 @@ public class FileSystem_Console extends FileSystem{
 			isFirst = false;
 		}	
 		firstFileName = FilePath.getFirstFileName();
+		commonFileName = FilePath.getCommonFileName();
 		return inputFilePathList;		
 	}
 	

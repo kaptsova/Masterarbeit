@@ -1,18 +1,28 @@
-package asmLine;
+package codeConverter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
-import codeConverter.Parser;
+import asmLine.AsmLine;
+import asmLine.DeclarationLine;
+import asmLine.ExecutableLine;
+import asmLine.OpCode;
 import commonTypes.CommandType;
 import commonTypes.PrecisionType;
 import fileSystem.FileSystem;
 import memorySystem.DataMemoryFile;
 import memorySystem.ProgramMemoryFile;
 import operand.Operand;
+import optimiser.OptimizationCriterion;
 
 public class ProgramCode {
+	
+	private int setupTime = 3;
+	public int getSetupTime(){
+		return setupTime;
+	}
 
 	private ArrayList<AsmLine> programCode = new ArrayList<AsmLine>();
 	private ArrayList<DeclarationLine> declarationCode = new ArrayList<DeclarationLine>();
@@ -21,15 +31,65 @@ public class ProgramCode {
 	
 	private boolean toOptimise= true;
 	
+	private OptimizationCriterion optimizationCriterion = OptimizationCriterion.undefined;
+	
 	public boolean isToOptimise(){
 		return toOptimise == true;
 	}
 	
-	private int setupTime = 3;
-	public int getSetupTime(){
-		return setupTime;
+	private void setToOptimise(){
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Choose if you want to optimise the program code(Y/n)");
+		String optimisationMode = sc.nextLine().toLowerCase();
+		if (optimisationMode.startsWith("y")){
+			toOptimise = true;
+			setOptimizationCriterion();
+		}
+		else {
+			toOptimise = false;
+		}	
+		sc.close();
 	}
 	
+	private void setOptimizationCriterion() {
+		Scanner sc = new Scanner(System.in);
+		printOptimisationCriterien();
+		String optCriterionString = sc.nextLine();
+		int optimizationCriterionIndex = Integer.parseInt(optCriterionString);
+		
+		switch (optimizationCriterionIndex){
+		case 1: 
+			optimizationCriterion = OptimizationCriterion.maxDelay;
+			break;
+		case 2:
+			optimizationCriterion = OptimizationCriterion.minDelay;
+			break;
+		case 3:
+			optimizationCriterion = OptimizationCriterion.minLevel;
+			break;
+		case 4:
+			optimizationCriterion = OptimizationCriterion.timeDistanceRatio;
+			break;
+		default:
+			optimizationCriterion = OptimizationCriterion.undefined;
+			break;
+		}
+		
+		
+	}
+
+	public OptimizationCriterion getOptimizationCriterion() {
+		return optimizationCriterion;
+	}
+
+	private void printOptimisationCriterien() {
+		System.out.println("Choose the optimization criterion");
+		System.out.println("\t - 1: Max Delay");
+		System.out.println("\t - 2: Min Delay");
+		System.out.println("\t - 3: Min Level");
+		System.out.println("\t - 4: TimeDistanceRatio");
+	}
+
 	public ArrayList<DeclarationLine> getDeclarationCode() {
 		return declarationCode;
 	}
@@ -43,12 +103,18 @@ public class ProgramCode {
 	DataMemoryFile datamem = new DataMemoryFile();
 	ProgramMemoryFile progmem = new ProgramMemoryFile();
 	
+
 	
 	public ProgramCode() {
 		// TODO Auto-generated constructor stub
 	}
 	
+	void setAdditionalParameters(){
+		setToOptimise();
+	}
+	
 	public void readProgramCode(final String programCodePath, PrecisionType prType) {
+
 		// Read the program code from file and fill the 
 		HashMap <Integer, String> programCodeStrings = new HashMap <Integer, String>();
 		programCodeStrings = Parser.readFromFile(programCodePath);
@@ -58,8 +124,14 @@ public class ProgramCode {
         {
 	    	AsmLine instance = AsmLine.createAsmLine(e.getValue(), e.getKey(), prType);
 	    	if (instance.getCmdType().equals(CommandType.dqCommand)){
-	    		declarationCode.add((DeclarationLine) instance);
-	    		addOperandToMap(instance);
+	    		DeclarationLine dq = (DeclarationLine)instance;
+	    		if (dq.isAlreadyDefined(declarationCode)){
+	    			// TODO handle error
+	    			System.out.println("already found");
+	    		} else {
+		    		declarationCode.add((DeclarationLine) instance);
+		    		addOperandToMap(instance);
+	    		}
 	    	}
 	    	else {
 	    		executableCode.add((ExecutableLine) instance);
@@ -69,6 +141,7 @@ public class ProgramCode {
 	    }
 
 	}
+	
 
 	private void addOperandToMap(AsmLine instance) {
 		DeclarationLine dq = (DeclarationLine) instance;
@@ -115,18 +188,7 @@ public class ProgramCode {
 		}
 		return true;
 	}
-	
-	
-	// TODO: check if there are multiple declarations
-	private void checkDeclarations(){
-		for (DeclarationLine dq: declarationCode){
-			// Commented - cause already implemented in operand class
-			//dq.fillLineList(executableCode);	
-			/*System.out.println(dq.toString());
-			dq.printReadAccessList();
-			dq.printWriteAccessList();	*/	
-		}
-	}
+
 		
 	public void printDeclarations(){		
 		System.out.println("All the declarations");

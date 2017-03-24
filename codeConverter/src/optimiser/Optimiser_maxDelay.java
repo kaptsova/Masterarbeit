@@ -2,7 +2,7 @@ package optimiser;
 
 import asmLine.ExecutableLine;
 
-public class Optimiser_maxDelay extends Optimiser {
+public class Optimiser_maxDelay extends Optimizer {
 
 	public Optimiser_maxDelay() {
 		// TODO Auto-generated constructor stub

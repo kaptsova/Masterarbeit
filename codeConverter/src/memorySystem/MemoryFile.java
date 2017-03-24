@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import asmLine.ProgramCode;
+import codeConverter.ProgramCode;
 import commonTypes.PrecisionType;
 import errorHandler.ErrorMessage;
 import errorHandler.ErrorType;

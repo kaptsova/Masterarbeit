@@ -3,7 +3,6 @@ package codeConverter;
 import java.util.ArrayList;
 
 import asmLine.ExecutableLine;
-import asmLine.ProgramCode;
 import commonTypes.ApplicationType;
 import commonTypes.PrecisionType;
 import fileSystem.FileSystem;
@@ -39,7 +38,8 @@ public class CodeConverter {
 		ProgramCode pcode = new ProgramCode();
 		pcode.readOperationCodes(fileSystem.getOpCodeFilePath());
 		
-		
+		// Set additional parameters such as optimization mode
+		pcode.setAdditionalParameters();
 		
 		for (int i = 0; i < numberOfFiles; i++){
 			

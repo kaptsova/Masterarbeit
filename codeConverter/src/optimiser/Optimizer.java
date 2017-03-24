@@ -5,13 +5,13 @@ import java.util.HashMap;
 
 import asmLine.ExecutableLine;
 import asmLine.ExecutableLine.Operator;
+import codeConverter.ProgramCode;
 import asmLine.IOPort;
-import asmLine.ProgramCode;
 import asmLine.ResultForwardingItem;
 import commonTypes.CommandType;
 import commonTypes.ExecutionStatus;
 
-public abstract class Optimiser {
+public abstract class Optimizer {
 	
 	ArrayList<ExecutableLine> readyNodes = new ArrayList<ExecutableLine>();
 	
@@ -32,7 +32,7 @@ public abstract class Optimiser {
 	int numberOfCommandsExecuted = 0;
 	int numberOfCommandsToExecute = 0;
 
-	public Optimiser() {
+	public Optimizer() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -99,7 +99,7 @@ public abstract class Optimiser {
 		}
 	}
 	
-	public ArrayList<String> optimiseProgramCode(ProgramCode pcode){
+	public ArrayList<String> optimizeProgramCode(ProgramCode pcode){
 		executableCode = pcode.getExecutableCode();
 		numberOfCommandsToExecute = executableCode.size();
 
@@ -341,9 +341,9 @@ public abstract class Optimiser {
 		return (isTaktOccupiedWithWb(takt)&& isTaktOccupiedWithOperation(takt));
 	}
 	
-	public static Optimiser createOptimiser(OptimisationCriterion initOptCriterion) {
-		OptimisationCriterion optCriterion = initOptCriterion;	
-		Optimiser opt = null;
+	public static Optimizer createOptimizer(OptimizationCriterion initOptCriterion) {
+		OptimizationCriterion optCriterion = initOptCriterion;	
+		Optimizer opt = null;
 		switch (optCriterion){
 			case maxDelay :	
 				opt = new Optimiser_maxDelay();

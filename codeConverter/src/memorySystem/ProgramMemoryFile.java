@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 import asmLine.ExecutableLine;
 import asmLine.ExecutableLine.Operator;
-import asmLine.ProgramCode;
+import codeConverter.ProgramCode;
 import commonTypes.PrecisionType;
-import optimiser.OptimisationCriterion;
-import optimiser.Optimiser;
+import optimiser.OptimizationCriterion;
+import optimiser.Optimizer;
 
 // TODO correct visibility levels
 
 public class ProgramMemoryFile extends MemoryFile{
 
 	ArrayList<String> programMemoryList = new ArrayList<String>();	
-	Optimiser optimiser = null;
-	private OptimisationCriterion optCriterion = OptimisationCriterion.minDelay;
+	Optimizer optimizer = null;
+	private OptimizationCriterion optCriterion = OptimizationCriterion.minDelay;
 	
 	public ProgramMemoryFile() {
 		// TODO Auto-generated constructor stub
@@ -31,6 +31,7 @@ public class ProgramMemoryFile extends MemoryFile{
 
 	@Override
 	public void fillMemoryList(ProgramCode pcode, PrecisionType prType) {
+		linesList.clear();
 		addWbNones(pcode);
 		
 		if (pcode.isToOptimise()){
@@ -50,8 +51,9 @@ public class ProgramMemoryFile extends MemoryFile{
 	
 	
 	private void fillMemoryList_optimised(ProgramCode pcode, PrecisionType prType){
-		optimiser = Optimiser.createOptimiser(optCriterion);
-		linesList.addAll(optimiser.optimiseProgramCode(pcode));
+		optCriterion = pcode.getOptimizationCriterion();
+		optimizer = Optimizer.createOptimizer(optCriterion);
+		linesList.addAll(optimizer.optimizeProgramCode(pcode));
 	}
 	
 	private void doNothing() {

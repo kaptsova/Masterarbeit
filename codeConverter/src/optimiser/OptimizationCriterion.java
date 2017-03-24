@@ -1,6 +1,6 @@
 package optimiser;
 
-public enum OptimisationCriterion {
+public enum OptimizationCriterion {
 	undefined,
 	maxDelay,
 	minDelay,

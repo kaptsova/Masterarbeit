@@ -1,7 +1,7 @@
 package memorySystem;
 
 import asmLine.DeclarationLine;
-import asmLine.ProgramCode;
+import codeConverter.ProgramCode;
 import commonTypes.PrecisionType;
 
 public class DataMemoryFile extends MemoryFile{
@@ -12,7 +12,7 @@ public class DataMemoryFile extends MemoryFile{
 
 	@Override
 	public void fillMemoryList(ProgramCode pcode, PrecisionType prType) {
-		
+		linesList.clear();
 		for (DeclarationLine dq: pcode.getDeclarationCode()){
 			String line = dq.getmOperandOut().substring(2);
 			linesList.add(line);

@@ -50,6 +50,7 @@ public abstract class FileSystem {
 	
 	
 	protected static String firstFileName = "";
+	protected static String commonFileName = "";
 	// 	- number f input files to be converted
 	protected int numberOfFiles = 0;
 	
@@ -87,7 +88,7 @@ public abstract class FileSystem {
 	
 	public void initializeFileSystem(){
 		setInputFilePathList();
-		createOutputFiles(firstFileName);
+		createOutputFiles(commonFileName);
 		setOpCodeFilePath(PrecisionType.doublePrecision);
 		ErrorMessage.setErrorFilePath(getErrorFilePath());
 	}

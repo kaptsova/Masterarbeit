@@ -64,6 +64,10 @@ public class ErrorMessage {
 		this(initErrorType, initFileLineId, initFilePath);
 		errorDescription = initErrorString;
 	}
+	
+	public void addDescription(String initErrorString){
+		errorDescription = initErrorString;
+	}
 
 	/*
 	 * Print information about this error message
